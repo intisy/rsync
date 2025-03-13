@@ -55,5 +55,4 @@ jobs:
 
       - name: Upload Jar to Release
         if: runner.os == 'Windows'
-        run: |
-          for %f in (build\libs\*) do gh release upload "${{ github.ref_name }}" "%f" --clobber
+        run: gh release upload "${{ github.ref_name }}" build\\libs\\* --clobber
