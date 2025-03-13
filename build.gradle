@@ -10,6 +10,7 @@ plugins {
     id "io.github.intisy.inno-gradle" version "1.4.2.3"
     id "edu.sc.seis.launch4j" version "3.0.6"
     id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "com.netflix.nebula.ospackage" version "11.11.1"
 }
 
 version = project.hasProperty('artifact_version') ? project.property('artifact_version') : '1.0'
@@ -75,11 +76,63 @@ if (org.gradle.internal.os.OperatingSystem.current().windows) {
             }
         }
     }
-    shadowJar.finalizedBy(createExeStandalone)
-    createExeStandalone.finalizedBy(createInstaller)
-    createInstaller.dependsOn("jlink")
-} else if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
+
+    tasks.register("buildWindows") {
+        finalizedBy "createExeStandalone", "jlink", "createInstaller"
+    }
+    shadowJar.finalizedBy("buildWindows")
+} else if (os.contains("nix") || os.contains("nux") || os.contains("aix")) { // TODO add support for linux / macos
+//    ospackage {
+//        packageName = artifact_name
+//        version = project.version
+//        release = '1'
+//        arch = 'noarch'
+//        os = LINUX
+//        summary = artifact_description
+//        description = artifact_description
+//
+//        from(jar.outputs.files) {
+//            into "/usr/share/$artifact_name"
+//            fileMode 0755
+//        }
+//        from('src/debian/control') {
+//            into "/etc/$artifact_name"
+//            fileMode 0644
+//        }
+//    }
+//
+//    buildDeb {
+//        dependsOn jar
+//    }
+//
+//    buildRpm {
+//        dependsOn jar
+//    }
+//
+//    tasks.register("buildLinux") {
+//        finalizedBy "buildDeb", "buildRpm"
+//    }
+//    shadowJar.finalizedBy("buildLinux")
 } else if (os.contains("mac")) {
+//    jlink {
+//        options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+//        launcher {
+//            name = artifact_name
+//            jvmArgs = ['-Djdk.gtk.version=2']
+//        }
+//        jpackage {
+//            targetPlatform("mac") {
+//                jdkHome = '/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home'
+//            }
+//            installerType = 'pkg'
+//            installerOptions = [
+//                    '--name', artifact_name,
+//                    '--description', artifact_description,
+//                    '--vendor', author
+//            ]
+//            imageOptions += ['--icon', 'src/main/resources/icon.icns']
+//        }
+//    }
 }
 
 jar {

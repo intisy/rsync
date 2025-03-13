@@ -49,7 +49,7 @@ jobs:
       - name: Upload assets to release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: "${{ github.ref_name }}"
+          tag_name: ${{ github.ref_name }}
           files: build/libs/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
