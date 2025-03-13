@@ -36,9 +36,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Git
-        run: echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
-
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v3
 
@@ -49,10 +46,10 @@ jobs:
       - name: Run build with Gradle Wrapper
         run: ./gradlew build
 
-      - name: Upload Jar to Release
-        if: runner.os != 'Windows'
-        run: gh release upload "${{ github.ref_name }}" build/libs/* --clobber
-
-      - name: Upload Jar to Release
-        if: runner.os == 'Windows'
-        run: gh release upload "${{ github.ref_name }}" build\\libs\\* --clobber
+      - name: Upload assets to release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "${{ github.ref_name }}"
+          files: build/libs/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
