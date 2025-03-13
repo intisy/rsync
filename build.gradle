@@ -43,35 +43,43 @@ jlink {
     }
 }
 
-tasks.register("createInstaller", InnoSetupTask) {
-    fileName = "${artifact_name}.exe"
-    icon = "icon.ico"
-    name = artifact_name
-    debug = false
-    jrePath = "jre"
-}
+def os = System.getProperty("os.name").toLowerCase()
+if (org.gradle.internal.os.OperatingSystem.current().windows) {
+    tasks.register("createInstaller", InnoSetupTask) {
+        fileName = "${artifact_name}.exe"
+        icon = "icon.ico"
+        name = artifact_name
+        debug = false
+        jrePath = "jre"
+    }
 
-tasks.register("createExeStandalone", Launch4jLibraryTask) {
-    outfile = "${artifact_name}.exe"
-    jarTask = project.tasks.shadowJar
+    tasks.register("createExeStandalone", Launch4jLibraryTask) {
+        outfile = "${artifact_name}.exe"
+        jarTask = project.tasks.shadowJar
 
-    mainClassName = "${artifact_group}.${artifact_id}.Main"
-    icon = "${projectDir}/icon.ico"
+        mainClassName = "${artifact_group}.${artifact_id}.Main"
+        icon = "${projectDir}/icon.ico"
 
-    bundledJrePath = "jre"
-    jreMinVersion = "17"
+        bundledJrePath = "jre"
+        jreMinVersion = "17"
 
-    dontWrapJar = false
-    headerType = "gui"
+        dontWrapJar = false
+        headerType = "gui"
 
-    outputDir = "${buildDir}/launch4j"
+        outputDir = "${buildDir}/launch4j"
 
-    doLast {
-        copy {
-            from "${buildDir}/launch4j"
-            into "${buildDir}/libs"
+        doLast {
+            copy {
+                from "${buildDir}/launch4j"
+                into "${buildDir}/libs"
+            }
         }
     }
+    shadowJar.finalizedBy(createExeStandalone)
+    createExeStandalone.finalizedBy(createInstaller)
+    createInstaller.dependsOn("jlink")
+} else if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
+} else if (os.contains("mac")) {
 }
 
 jar {
@@ -88,7 +96,3 @@ shadowJar {
     minimize()
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
 }
-
-shadowJar.finalizedBy(createExeStandalone)
-createExeStandalone.finalizedBy(createInstaller)
-createInstaller.dependsOn("jlink")
