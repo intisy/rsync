@@ -1,0 +1,48 @@
+name: Build And Upload
+on:
+  workflow_call:
+    inputs:
+      ref_name:
+        description: 'ref_name'
+        required: true
+        type: string
+    secrets:
+      envPAT:
+        required: true
+jobs:
+  build-and-upload:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout project sources
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Git
+        run: echo ${{ secrets.envPAT }} | gh auth login --with-token
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v3
+
+      - name: Grant execute permission for gradlew
+        if: runner.os != 'Windows'
+        run: chmod +x gradlew
+
+      - name: Run build with Gradle Wrapper
+        run: ./gradlew build
+
+      - name: Debug Releases
+        run: gh release list
+
+      - name: Create Release and Upload Jar
+        run: |
+          gh release create ${{ inputs.ref_name }} -t "Release ${{ inputs.ref_name }}"
+          gh release upload "${{ inputs.ref_name }}" build/libs/* --clobber
+        if: ${{ matrix.os == 'ubuntu-latest' }}
