@@ -50,9 +50,4 @@ jobs:
         run: ./gradlew build
 
       - name: Upload Jar to Release
-        if: runner.os != 'Windows'
         run: gh release upload "${{ github.ref_name }}" build/libs/* --clobber
-
-      - name: Upload Jar to Release
-        if: runner.os == 'Windows'
-        run: gh release upload "${{ github.ref_name }}" ./build/libs/* --clobber
