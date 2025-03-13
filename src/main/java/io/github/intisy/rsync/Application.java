@@ -26,10 +26,6 @@ public class Application extends javafx.application.Application {
     private TrayIcon trayIcon;
     private SystemTray tray;
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-
     @Override
     public void start(Stage primaryStage) {
         double width = 255;

@@ -1,10 +1,6 @@
 package io.github.intisy.rsync;
 
 import io.github.intisy.rsync.utils.FileUtils;
-import io.github.intisy.simple.logger.Log;
-import io.github.intisy.simple.logger.LogLevel;
-import io.github.intisy.simple.logger.LoggerBuilder;
-import io.github.intisy.simple.logger.SimpleLogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Rclone {
-    private final SimpleLogger logger;
     private final File rcloneFile;
     private final Config config;
 
@@ -33,7 +28,6 @@ public class Rclone {
     }
 
     public Rclone(File rcloneFile, Config config) {
-        this.logger = new LoggerBuilder().withLogLevel(LogLevel.DEBUG).build();
         this.rcloneFile = rcloneFile;
         this.config = config;
     }
@@ -49,7 +43,7 @@ public class Rclone {
     private static Path extractRcloneBinary() {
         try {
             Path rcloneBinary = FileUtils.copyResourceFolderToTemp("/rclone");
-            Log.note("Extracted rclone binary to: " + rcloneBinary.toFile().getAbsolutePath());
+            System.out.println("Extracted rclone binary to: " + rcloneBinary.toFile().getAbsolutePath());
             return rcloneBinary;
         } catch (IOException | URISyntaxException e) {
             throw new RuntimeException("Error extracting rclone binary");
@@ -57,7 +51,7 @@ public class Rclone {
     }
 
     public void resync() throws IOException, InterruptedException {
-        logger.info("Starting bi-directional resync...");
+        System.out.println("Starting bi-directional resync...");
         String remotePath = config.getRemotePath();
         String path = config.getPath();
 
@@ -67,11 +61,11 @@ public class Rclone {
 
         runRCloneCommand("bisync", remotePath + "/", path + "/", config.isDryRun(), "--create-empty-src-dirs", "--compare", "size,modtime,checksum", "--slow-hash-sync-only", "--max-delete", config.getMaxDelete(), "--resilient", "-MvP", "--drive-skip-gdocs", "--fix-case", "--resync");
 
-        logger.info("Resync complete.");
+        System.out.println("Resync complete.");
     }
 
     public void sync() throws IOException, InterruptedException {
-        logger.info("Starting bi-directional sync...");
+        System.out.println("Starting bi-directional sync...");
         String remotePath = config.getRemotePath();
         String path = config.getPath();
 
@@ -83,7 +77,7 @@ public class Rclone {
         if (output.contains("(fatal error encountered)"))
             resync();
 
-        logger.info("Synchronization complete.");
+        System.out.println("Synchronization complete.");
     }
 
     private String runRCloneCommand(String command, String src, String dest, boolean dryRun, Object... options)
@@ -98,7 +92,7 @@ public class Rclone {
         if (dryRun) {
             cmd.add("--dry-run");
         }
-        logger.info("Running command: " + String.join(" ", cmd));
+        System.out.println("Running command: " + String.join(" ", cmd));
         ProcessBuilder pb = new ProcessBuilder(cmd);
         
         // Redirect error stream to output stream
@@ -120,7 +114,7 @@ public class Rclone {
         
         int exitCode = process.waitFor();
         if (exitCode != 0) {
-            logger.warning("rclone command exited with code " + exitCode);
+            System.out.println("rclone command exited with code " + exitCode);
         }
         
         return output.toString();
@@ -136,7 +130,7 @@ public class Rclone {
             connection.setConnectTimeout(1000);
             connection.setReadTimeout(1000);
             connection.setRequestMethod("GET");
-            logger.note("Got response from server: " + connection.getResponseCode());
+            System.out.println("Got response from server: " + connection.getResponseCode());
             return connection.getResponseCode();
         } catch (Exception e) {
             return -1;
@@ -151,7 +145,7 @@ public class Rclone {
                 "--rc-addr", "127.0.0.1:5572"
         );
         pb.inheritIO();
-        logger.note("Starting rclone API...");
+        System.out.println("Starting rclone API...");
         return pb.start();
     }
 }
