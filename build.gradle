@@ -7,7 +7,7 @@ plugins {
     id "org.beryx.jlink" version "2.26.0"
     id "org.openjfx.javafxplugin" version "0.1.0"
     id "io.github.intisy.online-gradle" version "1.7.2"
-    id "io.github.intisy.inno-gradle" version "1.4.2.3"
+    id "io.github.intisy.inno-gradle" version "1.5.1"
     id "edu.sc.seis.launch4j" version "3.0.6"
     id "com.github.johnrengelman.shadow" version "8.1.1"
     id "com.netflix.nebula.ospackage" version "11.11.1"
@@ -36,22 +36,24 @@ dependencies {
     implementation "org.openjfx:javafx-web:17"
 }
 
-jlink {
-    imageName = "jre"
-    options = ['--strip-debug', '--compress=2', '--no-header-files', '--no-man-pages']
-    launcher {
-        name = artifact_name
-    }
-}
-
 def os = System.getProperty("os.name").toLowerCase()
 if (org.gradle.internal.os.OperatingSystem.current().windows) {
+    jlink {
+        imageName = "jre"
+        options = ['--strip-debug', '--compress=2', '--no-header-files', '--no-man-pages']
+        launcher {
+            name = artifact_name
+        }
+    }
+
     tasks.register("createInstaller", InnoSetupTask) {
         fileName = "${artifact_name}.exe"
         icon = "icon.ico"
         name = artifact_name
         debug = false
-        jrePath = "jre"
+        version = project.version
+        jrePath = buildDir.toPath().resolve("jre")
+        autoStart = true
     }
 
     tasks.register("createExeStandalone", Launch4jLibraryTask) {

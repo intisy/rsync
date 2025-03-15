@@ -35,6 +35,7 @@ public class Config {
     }
 
     public static void writeProperties(File configPath, Properties properties) {
+        configPath.getParentFile().mkdirs();
         try (FileWriter writer = new FileWriter(configPath)) {
             properties.store(writer, "RSync Config Template");
         } catch (IOException e) {
