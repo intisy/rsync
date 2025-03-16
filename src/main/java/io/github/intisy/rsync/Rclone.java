@@ -36,8 +36,12 @@ public class Rclone {
         return extractRcloneBinary().resolve("rclone.exe").toFile();
     }
 
+    public static File getPath() {
+        return new File(System.getProperty("user.home") + "/.rsync");
+    }
+
     public static Config getConfig() {
-        return Config.parse(new File(System.getProperty("user.home") + "/.rsync/config.properties"));
+        return Config.parse(new File(getPath(), "config.properties"));
     }
 
     private static Path extractRcloneBinary() {

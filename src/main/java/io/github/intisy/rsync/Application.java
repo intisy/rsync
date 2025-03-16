@@ -1,6 +1,7 @@
 package io.github.intisy.rsync;
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
@@ -12,6 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -134,12 +136,17 @@ public class Application extends javafx.application.Application {
         Scene scene = new Scene(pane, width, height);
         primaryStage.setScene(scene);
         setupSystemTray(primaryStage);
-        primaryStage.setOnCloseRequest(event -> {
+        EventHandler<WindowEvent> closeEvent = event -> {
             if (event != null)
                 event.consume();
             hideToSystemTray(primaryStage);
-        });
-        primaryStage.show();
+        };
+        primaryStage.setOnCloseRequest(closeEvent);
+        System.out.println("Launching with params: " + getParameters().getRaw());
+        if (getParameters().getRaw().contains("/auto"))
+            closeEvent.handle(null);
+        else
+            primaryStage.show();
     }
 
     private void setupSystemTray(Stage stage) {
