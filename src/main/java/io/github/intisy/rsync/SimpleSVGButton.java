@@ -52,12 +52,8 @@ public class SimpleSVGButton extends Pane {
         setOnMouseClicked(this::invokeOnClick);
         setBackgroundColor(Color.TRANSPARENT);
 
-        addOnMouseEntered(() -> {
-            rectangle.setFill(getHoverColor());
-        });
-        addOnMouseExited(() -> {
-            rectangle.setFill(getBackgroundColor());
-        });
+        addOnMouseEntered(() -> rectangle.setFill(getHoverColor()));
+        addOnMouseExited(() -> rectangle.setFill(getBackgroundColor()));
     }
 
     public void setEnabled(boolean enabled) {

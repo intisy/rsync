@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("SameParameterValue")
 public class Rclone {
     private final File rcloneFile;
     private final Config config;
@@ -142,7 +143,7 @@ public class Rclone {
         }
     }
 
-    public Process launchRcloneAPI() throws IOException {
+    public void launchRcloneAPI() throws IOException {
         ProcessBuilder pb = new ProcessBuilder(
                 rcloneFile.getAbsolutePath(),
                 "rcd",
@@ -151,6 +152,6 @@ public class Rclone {
         );
         pb.inheritIO();
         System.out.println("Starting rclone API...");
-        return pb.start();
+        pb.start();
     }
 }
