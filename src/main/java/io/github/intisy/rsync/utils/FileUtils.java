@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.Objects;
 
 public class FileUtils {
-    public static Path copyResourceFolderToTemp(String resourceFolderPath)
+    public static Path copyResourceFolder(String resourceFolderPath, Path folderPath)
             throws IOException, URISyntaxException {
         if (!resourceFolderPath.startsWith("/")) {
             resourceFolderPath = "/" + resourceFolderPath;
@@ -24,7 +24,7 @@ public class FileUtils {
             throw new IllegalArgumentException("Resource not found: " + resourceFolderPath);
         }
 
-        Path tempDir = Files.createTempDirectory("tempResource");
+        folderPath.toFile().mkdirs();
         URI resourceUri = resourceUrl.toURI();
 
         if ("jar".equals(resourceUri.getScheme())) {
@@ -33,7 +33,7 @@ public class FileUtils {
                 Files.walk(jarPath).forEach(source -> {
                     try {
                         Path relativePath = jarPath.relativize(source);
-                        Path targetPath = tempDir.resolve(relativePath.toString());
+                        Path targetPath = folderPath.resolve(relativePath.toString());
                         if (Files.isDirectory(source)) {
                             Files.createDirectories(targetPath);
                         } else {
@@ -49,13 +49,11 @@ public class FileUtils {
             if (!resourceFolder.exists() || !resourceFolder.isDirectory()) {
                 throw new IllegalArgumentException("Resource folder not found or not a directory: " + resourceFolderPath);
             }
-            copyDirectory(resourceFolder, tempDir.toFile());
+            copyDirectory(resourceFolder, folderPath.toFile());
         }
 
-        // Optionally register the temporary directory for deletion on exit
-        registerDeleteOnExit(tempDir.toFile());
-
-        return tempDir;
+        registerDeleteOnExit(folderPath.toFile());
+        return folderPath;
     }
 
 

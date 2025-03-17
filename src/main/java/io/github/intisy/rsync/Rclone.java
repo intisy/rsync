@@ -33,7 +33,7 @@ public class Rclone {
     }
 
     public static File getRcloneFile() {
-        return extractRcloneBinary().resolve("rclone.exe").toFile();
+        return extractRcloneBinary(getPath().toPath().resolve("rclone")).resolve("rclone.exe").toFile();
     }
 
     public static File getPath() {
@@ -44,14 +44,15 @@ public class Rclone {
         return Config.parse(new File(getPath(), "config.properties"));
     }
 
-    private static Path extractRcloneBinary() {
-        try {
-            Path rcloneBinary = FileUtils.copyResourceFolderToTemp("/rclone");
-            System.out.println("Extracted rclone binary to: " + rcloneBinary.toFile().getAbsolutePath());
-            return rcloneBinary;
-        } catch (IOException | URISyntaxException e) {
-            throw new RuntimeException("Error extracting rclone binary");
-        }
+    private static Path extractRcloneBinary(Path rcloneBinary) {
+        if (!rcloneBinary.toFile().exists())
+            try {
+                FileUtils.copyResourceFolder("/rclone", rcloneBinary);
+                System.out.println("Extracted rclone binary to: " + rcloneBinary.toFile().getAbsolutePath());
+            } catch (IOException | URISyntaxException e) {
+                throw new RuntimeException("Error extracting rclone binary");
+            }
+        return rcloneBinary;
     }
 
     public void resync() throws IOException, InterruptedException {
