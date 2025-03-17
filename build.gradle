@@ -80,10 +80,10 @@ if (org.gradle.internal.os.OperatingSystem.current().windows) {
     }
 
     tasks.register("buildWindows") {
-        finalizedBy "createExeStandalone", "jlink", "createInstaller"
+        finalizedBy "createInstaller"
     }
-    createExeStandalone.mustRunAfter "jlink"
-    createExeStandalone.dependsOn "jlink"
+    createInstaller.dependsOn "jlink"
+    createInstaller.dependsOn "createExeStandalone"
 
     shadowJar.finalizedBy("buildWindows")
 } else if (os.contains("nix") || os.contains("nux") || os.contains("aix")) { // TODO add support for linux / macos
