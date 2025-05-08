@@ -19,11 +19,14 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Objects;
 
 @SuppressWarnings({"SameParameterValue", "BusyWait"})
 public class Application extends javafx.application.Application {
+    private final boolean useApi = false;
     private final int syncDelayInMillis = 0;
     private TrayIcon trayIcon;
     private SystemTray tray;
@@ -31,11 +34,13 @@ public class Application extends javafx.application.Application {
     @Override
     public void start(Stage primaryStage) {
         double width = 255;
-        double height = 210;
+        double height = 240;
         String apiUrl = "http://127.0.0.1:5572/";
         Config config = Rclone.getConfig();
         Rclone rclone = new Rclone(config);
-
+        Wait wait = new Wait();
+        wait.setVariable(config.isSync());
+        rclone.setUseApi(useApi);
         Platform.setImplicitExit(false);
         primaryStage.setTitle("Rsync");
         primaryStage.initStyle(StageStyle.UNDECORATED);
@@ -99,20 +104,52 @@ public class Application extends javafx.application.Application {
         syncLabel.setStyle("-fx-text-fill: white;");
         GridPane.setConstraints(syncLabel, 0, 4);
 
-        ToggleButton syncToggle = new ToggleButton("OFF");
-        syncToggle.setStyle("-fx-background-color: gray; -fx-text-fill: white;");
-        syncToggle.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
-            config.setActive(syncToggle.isSelected());
-            if (syncToggle.isSelected()) {
-                syncToggle.setText("ON");
-                syncToggle.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+        CheckBox syncCheckBox = new CheckBox();
+        localPathField.setStyle("-fx-background-color: #3C3C3CFF; -fx-text-fill: white;");
+        GridPane.setConstraints(syncCheckBox, 1, 4);
+        syncCheckBox.setSelected(config.isSync());
+        syncCheckBox.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
+            wait.setVariable(newValue);
+            config.setSync(newValue);
+        });
+
+        Label runLabel = new Label("Run:");
+        runLabel.setStyle("-fx-text-fill: white;");
+        GridPane.setConstraints(runLabel, 0, 5);
+
+        ToggleButton runToggle = new ToggleButton("OFF");
+        runToggle.setStyle("-fx-background-color: gray; -fx-text-fill: white;");
+        runToggle.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
+            config.setActive(runToggle.isSelected());
+            if (runToggle.isSelected()) {
+                runToggle.setText("ON");
+                runToggle.setStyle("-fx-background-color: green; -fx-text-fill: white;");
                 new Thread(() -> {
                     try {
                         if (!rclone.isResponsive(apiUrl))
-                            rclone.launchRcloneAPI();
-                        rclone.resync();
+                            rclone.launchRcloneApi();
+                        rclone.waitForApi();
+
+                        File lockPath = new File(System.getenv("LOCALAPPDATA") + "\\rclone\\bisync\\");
+                        if (lockPath.exists()) {
+                            for (File file : Objects.requireNonNull(lockPath.listFiles())) {
+                                if (file.getName().contains(config.getRemotePath().split(":")[0]))
+                                    if (file.getName().contains(config.getPath().replace(":", "_").replace("\\", "_")))
+                                        if (file.delete())
+                                            System.out.println("Deleted lock file: " + file.getName());
+                            }
+                        }
+
+                        boolean shouldResync = syncCheckBox.isSelected() && !rclone.resync();
                         while (config.isActive()) {
-                            rclone.sync();
+                            if (!wait.getVariable()) {
+                                wait.waitForVariable(true);
+                                shouldResync = rclone.resync();
+                            }
+                            if (shouldResync)
+                                shouldResync = rclone.resync();
+                            else
+                                shouldResync = rclone.sync();
                             Thread.sleep(syncDelayInMillis);
                         }
                     } catch (Exception ex) {
@@ -120,15 +157,15 @@ public class Application extends javafx.application.Application {
                     }
                 }).start();
             } else {
-                syncToggle.setText("OFF");
-                syncToggle.setStyle("-fx-background-color: gray; -fx-text-fill: white;");
+                runToggle.setText("OFF");
+                runToggle.setStyle("-fx-background-color: gray; -fx-text-fill: white;");
             }
         });
-        GridPane.setConstraints(syncToggle, 1, 4);
-        syncToggle.setSelected(config.isActive());
+        GridPane.setConstraints(runToggle, 1, 5);
+        runToggle.setSelected(config.isActive());
 
         Pane pane = new Pane();
-        grid.getChildren().addAll(remoteLabel, remotePathField, localLabel, localPathField, maxDeleteLabel, maxDeleteField, dryRunLabel, dryRunCheckBox, syncLabel, syncToggle);
+        grid.getChildren().addAll(remoteLabel, remotePathField, localLabel, localPathField, maxDeleteLabel, maxDeleteField, dryRunLabel, dryRunCheckBox, syncLabel, syncCheckBox, runLabel, runToggle);
         grid.setLayoutY(40);
         pane.getChildren().addAll(title, grid);
         pane.setStyle("-fx-background-color: #2b2b2b;");
@@ -143,6 +180,7 @@ public class Application extends javafx.application.Application {
         };
         primaryStage.setOnCloseRequest(closeEvent);
         System.out.println("Launching with params: " + getParameters().getRaw());
+
         if (getParameters().getRaw().contains("/auto"))
             closeEvent.handle(null);
         else

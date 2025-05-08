@@ -43,6 +43,18 @@ public class Config {
         }
     }
 
+    public String getUsername() {
+        return properties.getProperty("username", "root");
+    }
+
+    public boolean isUsingPassword() {
+        return Boolean.parseBoolean(properties.getProperty("usingPassword", "false"));
+    }
+
+    public String getPassword() {
+        return properties.getProperty("password", "root");
+    }
+
     public String getRemoteA() {
         return properties.getProperty("remoteA", "<<MUST SPECIFY>>");
     }
@@ -75,6 +87,15 @@ public class Config {
 
     public void setDryRun(boolean dryRun) {
         properties.setProperty("dryRun", String.valueOf(dryRun));
+        writeProperties(configFile, properties);
+    }
+
+    public boolean isSync() {
+        return Boolean.parseBoolean(properties.getProperty("sync", "false"));
+    }
+
+    public void setSync(boolean sync) {
+        properties.setProperty("sync", String.valueOf(sync));
         writeProperties(configFile, properties);
     }
 

@@ -34,6 +34,8 @@ dependencies {
     implementation "org.openjfx:javafx-controls:17"
     implementation "org.openjfx:javafx-fxml:17"
     implementation "org.openjfx:javafx-web:17"
+    implementation "com.google.code.gson:gson:2.12.1"
+    implementation "org.fusesource.jansi:jansi:2.4.2"
 }
 
 def os = System.getProperty("os.name").toLowerCase()

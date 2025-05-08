@@ -1,0 +1,442 @@
+commit 13875b4500fc77a073fae58a1b771530706b7392
+Author: Nick Craig-Wood <nick@craig-wood.com>
+Date:   Thu May 1 15:33:17 2025 +0100
+
+    Version v1.69.2
+
+commit 3d3ea9ee30ef56d1a80b13cc4244a2a9a218c55d
+Author: Nick Craig-Wood <nick@craig-wood.com>
+Date:   Wed Feb 26 12:21:35 2025 +0000
+
+    vfs: fix integration test failures
+    
+    In this commit
+    
+    ceef78ce4493f8d0 vfs: fix directory cache serving stale data
+    
+    We added a new test which caused lots of integration test failures.
+    
+    This fixes the problem by disabling the test unless the feature flag
+    DirModTimeUpdatesOnWrite is present on the remote.
+
+commit 84f11ae4480986d0cc775bed55219cdeb0844fe7
+Author: Nick Craig-Wood <nick@craig-wood.com>
+Date:   Wed Apr 30 16:13:34 2025 +0100
+
+    build: stop building with go < go1.23 as security updates forbade it
+
+commit ef975129a8b7e508a5b942b329e07e429a4d5546
+Author: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+Date:   Wed Apr 16 23:26:06 2025 +0000
+
+    build: bump golang.org/x/net from 0.36.0 to 0.38.0
+    
+    Bumps [golang.org/x/net](https://github.com/golang/net) from 0.36.0 to 0.38.0.
+    - [Commits](https://github.com/golang/net/compare/v0.36.0...v0.38.0)
+    
+    ---
+    updated-dependencies:
+    - dependency-name: golang.org/x/net
+      dependency-version: 0.38.0
+      dependency-type: direct:production
+    ...
+    
+    Signed-off-by: dependabot[bot] <support@github.com>
+
+commit c9f3456341f6bf22dc0711cf06b39c6979730164
+Author: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+Date:   Sun Apr 6 11:46:13 2025 +0100
+
+    build: update github.com/golang-jwt/jwt/v5 from 5.2.1 to 5.2.2 to fix CVE-2025-30204
+    
+    Bumps [github.com/golang-jwt/jwt/v5](https://github.com/golang-jwt/jwt) from 5.2.1 to 5.2.2.
+    - [Release notes](https://github.com/golang-jwt/jwt/releases)
+    - [Changelog](https://github.com/golang-jwt/jwt/blob/main/VERSION_HISTORY.md)
+    - [Commits](https://github.com/golang-jwt/jwt/compare/v5.2.1...v5.2.2)
+    
+    See: https://github.com/golang-jwt/jwt/security/advisories/GHSA-mh63-6h87-95cp
+    See: https://www.cve.org/CVERecord?id=CVE-2025-30204
+    
+    Signed-off-by: dependabot[bot] <support@github.com>
+
+commit 0121dc11d32a71d6ba0b203b2c9c28ce4538f527
+Author: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+Date:   Fri Mar 21 22:31:22 2025 +0000
+
+    build: bump github.com/golang-jwt/jwt/v4 from 4.5.1 to 4.5.2
+    
+    Bumps [github.com/golang-jwt/jwt/v4](https://github.com/golang-jwt/jwt) from 4.5.1 to 4.5.2.
+    - [Release notes](https://github.com/golang-jwt/jwt/releases)
+    - [Changelog](https://github.com/golang-jwt/jwt/blob/main/VERSION_HISTORY.md)
+    - [Commits](https://github.com/golang-jwt/jwt/compare/v4.5.1...v4.5.2)
+    
+    ---
+    updated-dependencies:
+    - dependency-name: github.com/golang-jwt/jwt/v4
+      dependency-type: direct:production
+    ...
+    
+    Signed-off-by: dependabot[bot] <support@github.com>
+
+commit 32ea8f6dc823312704118069b5ee7c1afa0dbb65
+Author: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+Date:   Mon Mar 17 17:25:12 2025 +0000
+
+    build: update golang.org/x/net to 0.36.0. to fix CVE-2025-22869
+    
+    SSH servers which implement file transfer protocols are vulnerable to
+    a denial of service attack from clients which complete the key
+    exchange slowly, or not at all, causing pending content to be read
+    into memory, but never transmitted.
+    
+    This updates golang.org/x/net to fix the problem.
+    
+    See: https://pkg.go.dev/vuln/GO-2025-3487
+    See: https://www.cve.org/CVERecord?id=CVE-2025-22869
+    Signed-off-by: dependabot[bot] <support@github.com>
+    Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+
+commit 775f3e49f0b03f7931a2115fab86706134811b72
+Author: Nick Craig-Wood <nick@craig-wood.com>
+Date:   Wed Feb 26 11:13:48 2025 +0000
+
+    build: update golang.org/x/crypto to v0.35.0 to fix CVE-2025-22869
+    
+    SSH servers which implement file transfer protocols are vulnerable to
+    a denial of service attack from clients which complete the key
+    exchange slowly, or not at all, causing pending content to be read
+    into memory, but never transmitted.
+    
+    This affects users of `rclone serve sftp`.
+    
+    See: https://pkg.go.dev/vuln/GO-2025-3487
+
+commit b0310c72731c3d7eea88d7c756daac5466c750c2
+Author: Jugal Kishore <me@devjugal.com>
+Date:   Sun Apr 27 22:46:43 2025 +0530
+
+    docs: correct SSL docs anchor link from #ssl-tls to #tls-ssl
+    
+    Fixed the anchor link in the documentation that points to the SSL/TLS section.
+    This change ensures the link directs correctly to the intended section (#tls-ssl) instead of the incorrect #ssl-tls.
+    
+    No functional code changes, documentation only.
+
+commit 07bb122d474b8df3ec684378e48e09816a38ff1b
+Author: Nick Craig-Wood <nick@craig-wood.com>
+Date:   Thu Apr 24 13:45:04 2025 +0100
+
+    drive: metadata: fix error when setting copy-requires-writer-permission on a folder
+    
+    This appears not to be allowed, so this fixes the problem by ignoring
+    that metadata for a folder.
+    
+    Fixes #8517
+
+commit aedcd565312e5762922de8b9dd3b82f2f1176c05
+Author: Ed Craig-Wood <138211970+edc-w@users.noreply.github.com>
+Date:   Wed Apr 16 10:42:00 2025 +0100
+
+    Update README.md
+    
+    removed warp as project sponsor
+
+commit 4a10491c2a9c859f89836e7bce901742bdcbcab8
+Author: Andrew Kreimer <algonell@gmail.com>
+Date:   Tue Apr 15 16:42:40 2025 +0300
+
+    docs: fix typos via codespell
+    
+    There are some types in the changelog.
+    
+    Fix them via codespell.
+
+commit bbceb84cad0b8d484e46ccac7a49fd92c05898cc
+Author: Nick Craig-Wood <nick@craig-wood.com>
+Date:   Wed Mar 26 11:55:17 2025 +0000
+
+    onedrive: fix metadata ordering in permissions
+    
+    Before this change, due to a quirk in Graph, User permissions could be
+    lost when applying permissions.
+    
+    Fixes #8465
+
+commit 4c3737014a2310952fbf2f8f2f8e79cbcd7c7a10
+Author: Ben Alex <ben.alex@acegi.com.au>
+Date:   Wed Apr 9 11:58:37 2025 +1000
+
+    iclouddrive: fix so created files are writable
+    
+    At present any created file (eg through the touch command, copy, mount
+    etc) is read-only in iCloud.
+    
+    This has been reported by users at
+    https://forum.rclone.org/t/icloud-and-file-editing-permissions/50659.
+
+commit a49ccddb81d1745df1710f3ef19251e2f01279df
+Author: simwai <16225108+simwai@users.noreply.github.com>
+Date:   Sat Mar 29 21:31:32 2025 +0100
+
+    cmd/authorize: show required arguments in help text
+
+commit 7fd3d0d1ab209733d49dc40f3a9df81de2347bf5
+Author: Markus Gerstel <markus.gerstel@osirium.com>
+Date:   Sun Mar 9 10:22:01 2025 +0000
+
+    s3: documentation regression - fixes #8438
+    
+    We lost a previous documentation fix (#7077) detailing how to restore
+    single objects from AWS S3 Glacier.
+    
+    Also make clearer that rclone provides restore functionality natively.
+    
+    Co-authored-by: danielkrajnik <dan94kra@gmail.com>
+
+commit 77c1031dcda9b79845653ed5adc680b150f1d950
+Author: huanghaojun <jasen.huang@ugreen.com>
+Date:   Wed Apr 9 18:58:09 2025 +0800
+
+    vfs: fix inefficient directory caching when directory reads are slow
+    
+    Before this change, when querying directories with large datasets, if
+    the query duration exceeded the directory cache expiration time, the
+    cache became invalid by the time results were retrieved. This means
+    every execution of `_readDir` triggers `_readDirFromEntries`,
+    resulting in prolonged processing times.
+    
+    After this change we update the directory time with the time at the
+    end of the query.
+
+commit d8c7031dc36bd5857364c3c98ce9dc3c413d8b90
+Author: simonmcnair <101189766+simonmcnair@users.noreply.github.com>
+Date:   Wed Apr 9 11:54:06 2025 +0100
+
+    docs: update fuse version in docker docs
+
+commit ab5844df77cfde80012dddacff1de54a60c4fe97
+Author: Samantha Bowen <sam@bbowen.net>
+Date:   Sat Mar 29 14:30:17 2025 -0700
+
+    fs/config: Read configuration passwords from stdin even when terminated with EOF - fixes #8480
+
+commit a3c4e2fd206972ad42c2b5a84474a31f22f78f2b
+Author: Nick Craig-Wood <nick@craig-wood.com>
+Date:   Sat Apr 5 13:35:04 2025 +0100
+
+    lib/http: fix race between Serve() and Shutdown()
+    
+    This was discovered by the race detector.
+
+commit b12d2f32db27f877bbdce417126f6d47b4ec4a98
+Author: Danny Garside <dannygarside@outlook.com>
+Date:   Tue Apr 8 20:51:22 2025 +0100
+
+    docs: fix minor typo in box docs
+
+commit 85c156370152e40d3a3acd9fc0ea28adae9bdfee
+Author: Nick Craig-Wood <nick@craig-wood.com>
+Date:   Sat Apr 5 13:04:13 2025 +0100
+
+    docs: Add rcloneui.com as Silver Sponsor
+
+commit f52d7533634f686c00edb9703cacd9fdbabb954e
+Author: eccoisle <167755281+eccoisle@users.noreply.github.com>
+Date:   Sun Apr 6 22:28:34 2025 +1000
+
+    docs: replace option --auto-filename-header with --header-filename
+
+commit f76c72b5cc5085d5ed403a7521e3990090419c73
+Author: alingse <alingse@foxmail.com>
+Date:   Fri Apr 4 22:21:45 2025 +0800
+
+    operations: fix call fmt.Errorf with wrong err
+
+commit 46dcc0eaf6a9d92e80b18b4da36fda8caddc2f99
+Author: Nick Craig-Wood <nick@craig-wood.com>
+Date:   Tue Mar 25 15:30:49 2025 +0000
+
+    rc: fix debug/* commands not being available over unix sockets
+    
+    This was caused by an incorrect handler URL which was passing the
+    debug/* commands to the debug/pprof handler by accident. This only
+    happened when using unix sockets.
+
+commit f46787dcc353d37b1a4187531066a330e0adbbab
+Author: nielash <nielronash@gmail.com>
+Date:   Thu Mar 6 08:15:51 2025 -0500
+
+    http: correct root if definitely pointing to a file - fixes #8428
+    
+    This was formalized in
+    https://github.com/rclone/rclone/commit/c69eb84573c85206ab028eda2987180e049ef2e4
+    But it appears that we forgot to update `http`, and the `FsRoot` test didn't
+    catch it because we don't currently have an http integration test.
+
+commit e7c46912a3176e0350f3fbf17c0d91a8ea2681e9
+Author: Nick Craig-Wood <nick@craig-wood.com>
+Date:   Wed Mar 12 17:29:53 2025 +0000
+
+    fs: fix corruption of SizeSuffix with "B" suffix in config (eg --min-size)
+    
+    Before this change, the config system round tripped fs.SizeSuffix
+    values through strings like this, corrupting them in the process.
+    
+        "2B" -> 2 -> "2" -> 2048
+    
+    This caused `--min-size 2B` to be interpreted as `--min-size 2k`.
+    
+    This fix makes sure SizeSuffix values have a "B" suffix when turned
+    into a string where necessary, so it becomes
+    
+        "2B" -> 2 -> "2B" -> 2
+    
+    In rclone v2 we should probably declare unsuffixed SizeSuffix values
+    are in bytes not kBytes (done for rsync compatibility) but this would
+    be a backwards incompatible change which we don't want for v1.
+    
+    Fixes #8437
+    Fixes #8212
+    Fixes #5169
+
+commit 296c26b671e7b3d2c3433e82a1af4eb085664aad
+Author: jack <9480542+jackusm@users.noreply.github.com>
+Date:   Sat Mar 8 22:40:46 2025 +0000
+
+    docs: fix incorrect mentions of vfs-cache-min-free-size
+
+commit ef99b9ad18a7ac6c9775df4d0d4cf6ca67a7a17b
+Author: Nick Craig-Wood <nick@craig-wood.com>
+Date:   Fri Feb 28 17:01:00 2025 +0000
+
+    fs/object: fix memory object out of bounds Seek
+
+commit 2e853b6e75c8c799340358bcf558778d442ee6cd
+Author: Nick Craig-Wood <nick@craig-wood.com>
+Date:   Wed Mar 5 11:08:26 2025 +0000
+
+    serve nfs: fix unlikely crash
+
+commit d725f4f4def1b329f4071d2b873ca200f8a6c5bd
+Author: Zachary Vorhies <zachvorhies@protonmail.com>
+Date:   Tue Mar 4 09:31:56 2025 -0700
+
+    docs: add note for using rclone cat for slicing out a byte range from a file
+
+commit 6a9c2350de301efa8ef70bfbfc53bdbe7b7b51a5
+Author: Dave Vasilevsky <dave@vasilevsky.ca>
+Date:   Sat Feb 15 19:26:09 2025 -0500
+
+    dropbox: Retry link without expiry
+    
+    Dropbox only allows public links with expiry for certain account types.
+    Rather than erroring for other accounts, retry without expiry.
+
+commit 659aca871141e4ea7c93547346ed450c589fb630
+Author: emyarod <emyarod@users.noreply.github.com>
+Date:   Sat Feb 15 18:07:20 2025 -0600
+
+    chore: update contributor email
+
+commit 1ac7e323029c9822bfe4e9ad0635d9baabd454f6
+Author: Nick Craig-Wood <nick@craig-wood.com>
+Date:   Sat Feb 15 20:08:33 2025 +0000
+
+    docs: correct stable release workflow
+
+commit 286ae6a1b4deeea8677614e15c37dde4e1796ff8
+Author: Lorenz Brun <lorenz@brun.one>
+Date:   Tue Sep 20 00:31:56 2022 +0200
+
+    vfs: fix directory cache serving stale data
+    
+    The VFS directory cache layer didn't update directory entry properties
+    if they are reused after cache invalidation.
+    
+    Update them unconditionally as newDir sets them to the same value and
+    setting a pointer is cheaper in both LoC as well as CPU cycles than a
+    branch.
+    
+    Also add a test exercising this behavior.
+    
+    Fixes #6335
+
+commit 861456d9703a41cc7f95f63abe8725cff585c588
+Author: Anagh Kumar Baranwal <6824881+darthShadow@users.noreply.github.com>
+Date:   Sat Feb 15 19:53:43 2025 +0530
+
+    build: fix docker plugin build - fixes #8394
+    
+    Signed-off-by: Anagh Kumar Baranwal <6824881+darthShadow@users.noreply.github.com>
+
+commit 5fa9c0209eaa7c6308938d78530862620e6042da
+Author: Michael Kebe <michael.kebe@gmail.com>
+Date:   Sat Feb 15 11:11:26 2025 +0100
+
+    docs: improved sftp limitations
+    
+    Added a link to `--sftp-path-override` for a better solution with working hash calculation.
+
+commit b00dcc37bd477fa1f6927792ed378c56f514f3ab
+Author: Anagh Kumar Baranwal <6824881+darthShadow@users.noreply.github.com>
+Date:   Thu Feb 13 17:09:24 2025 +0530
+
+    accounting: fix percentDiff calculation -- fixes #8345
+    
+    Signed-off-by: Anagh Kumar Baranwal <6824881+darthShadow@users.noreply.github.com>
+
+commit 92efc5ff43900fc8505027d8de3974da8ac1cdb1
+Author: Janne Hellsten <jjhellst@gmail.com>
+Date:   Wed Feb 12 23:31:05 2025 +0200
+
+    cmd: fix crash if rclone is invoked without any arguments - Fixes #8378
+
+commit 57bbb4be9f6c2eb8753b5b274e82f7f6e10a9875
+Author: ll3006 <doublel3006@gmail.com>
+Date:   Fri Feb 7 14:23:28 2025 +0100
+
+    sync: copy dir modtimes even when copyEmptySrcDirs is false - fixes #8317
+    
+    Before, after a sync, only file modtimes were updated when not using
+    --copy-empty-src-dirs. This ensures modtimes are updated to match the source
+    folder, regardless of copyEmptySrcDir. The flag --no-update-dir-modtime
+    (which previously did nothing) will disable this.
+
+commit c62fbc5269788db5cf91f523557dfa63eb630de3
+Author: Anagh Kumar Baranwal <6824881+darthShadow@users.noreply.github.com>
+Date:   Tue Sep 17 18:09:54 2024 +0530
+
+    stats: fix the speed not getting updated after a pause in the processing
+    
+    This shifts the behavior of the average loop to be a persistent loop
+    that gets resumed/paused when transfers & checks are started/completed.
+    
+    Previously, the averageLoop was stopped on completion of
+    transfers & checks but failed to start again due to the protection of
+    the sync.Once
+    
+    Signed-off-by: Anagh Kumar Baranwal <6824881+darthShadow@users.noreply.github.com>
+
+commit 6eb8919719ef52c548bb2ac1c4f467b288e972bc
+Author: Nick Craig-Wood <nick@craig-wood.com>
+Date:   Sat Jan 11 12:49:40 2025 +0000
+
+    sync: fix cpu spinning when empty directory finding with leading slashes
+    
+    Before this change the logic which makes sure we create all
+    directories could get confused with directories which started with
+    slashes and get into an infinite loop consuming 100% of the CPU.
+
+commit ff4d7c8dd04fef460c0b474bb0fad8c18565d62e
+Author: hiddenmarten <hiddenmarten@gmail.com>
+Date:   Mon Dec 23 16:41:24 2024 +0100
+
+    rc: disable the metrics server when running `rclone rc`
+    
+    Fixes #8248
+
+commit 4f8dfd14fc9ad058d8aa9d43de9c2d6c43cd5592
+Author: Nick Craig-Wood <nick@craig-wood.com>
+Date:   Fri Feb 14 17:14:31 2025 +0000
+
+    Start v1.69.2-DEV development
