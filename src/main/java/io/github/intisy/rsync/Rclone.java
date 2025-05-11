@@ -49,7 +49,9 @@ public class Rclone {
     }
 
     public static File getRcloneFile() {
-        return extractRcloneBinary(getRclonePath().toPath()).resolve(OsDetector.getOperatingSystemType() == OsDetector.OSType.WINDOWS ? "rclone.exe" : "rclone").toFile();
+        File rcloneFile = extractRcloneBinary(getRclonePath().toPath()).resolve(OsDetector.getOperatingSystemType() == OsDetector.OSType.WINDOWS ? "rclone.exe" : "rclone").toFile();
+        rcloneFile.setExecutable(true, false);
+        return rcloneFile;
     }
 
     public static File getPath() {
@@ -71,9 +73,9 @@ public class Rclone {
                     FileUtils.copyResourceFolder("/rclone/windows", rcloneBinary);
                 else if (OsDetector.getOperatingSystemType() == OsDetector.OSType.MAC)
                     FileUtils.copyResourceFolder("/rclone/mac", rcloneBinary);
-                else if (OsDetector.getOperatingSystemType() == OsDetector.OSType.LINUX)
+                else if (OsDetector.getOperatingSystemType() == OsDetector.OSType.LINUX) {
                     FileUtils.copyResourceFolder("/rclone/linux", rcloneBinary);
-                else
+                } else
                     throw new RuntimeException("Unsupported OS: " + OsDetector.getRawOsInfo());
                 System.out.println("Extracted rclone binary to: " + rcloneBinary.toFile().getAbsolutePath());
             } catch (IOException | URISyntaxException e) {
@@ -135,7 +137,7 @@ public class Rclone {
         }
     }
 
-    private static JsonObject getJsonObject() {
+    private JsonObject getJsonObject() {
         JsonObject payload = new JsonObject();
         payload.addProperty("path1", getConfig().getRemoteA());
         payload.addProperty("path2", getConfig().getRemoteB());
